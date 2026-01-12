@@ -1,0 +1,9 @@
+node_modules/
+.parcel-cache/
+dist/
+SOURCE/node_modules/
+SOURCE/.parcel-cache/
+SOURCE/dist/
+.DS_Store
+Thumbs.db
+.env

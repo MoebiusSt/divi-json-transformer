@@ -1,0 +1,132 @@
+import type { Language } from './types'
+export interface Translations {
+  title: string
+  subtitle: string
+  settings: string
+  processingMode: string
+  normal: string
+  advancedMode: string
+  devMode: string
+  devModeDesc: string
+  splitAt: string
+  tagMerging: string
+  tagMergingLabel: string
+  tagMergingDesc: string
+  moduleSettings: string
+  maxModulesPerRow: string
+  maxParagraphsPerModule: string
+  noRowSplit: string
+  noModuleSplit: string
+  dropZone: string
+  dropZoneText: string
+  dropZoneSubtext: string
+  status: string
+  ready: string
+  dragFiles: string
+  processing: string
+  skipped: string
+  notJSON: string
+  loaded: string
+  transforming: string
+  completed: string
+  downloadStarted: string
+  error: string
+  settingsTooltip: string
+  footnoteSettings: string
+  footnoteLabel: string
+  footnoteDesc: string
+  interviewMode: string
+  interviewLabel: string
+  interviewDesc: string
+}
+export const translations: Record<Language, Translations> = {
+  en: {
+    title: 'DIVI JSON Transformer',
+    subtitle: 'Transform DIVI JSON exports into better structured layouts v2.0.6',
+    settings: 'Settings',
+    processingMode: 'Processing Mode',
+    normal: 'Normal',
+    advancedMode: 'Advanced Mode',
+    devMode: 'Dev Mode (Beta)',
+    devModeDesc: 'Includes all advanced features plus footnotes and interview transformations',
+    splitAt: 'Split at:',
+    tagMerging: 'HTML Cleanup',
+    tagMergingLabel: 'Merge fragmented tags',
+    tagMergingDesc: 'Merges fragmented tags (em, span)',
+    moduleSettings: 'Module Settings',
+    maxModulesPerRow: 'Max modules per row:',
+    maxParagraphsPerModule: 'Max paragraphs per text module:',
+    noRowSplit: '(0 = no row splitting)',
+    noModuleSplit: '(0 = no module splitting)',
+    dropZone: 'Drag & Drop Zone',
+    dropZoneText: 'Click here or drag JSON files here',
+    dropZoneSubtext: 'Supports multiple files at once',
+    status: 'Status',
+    ready: 'Ready for files...',
+    dragFiles: 'Drag JSON files into the area to process them.',
+    processing: 'Processing:',
+    skipped: 'Skipped:',
+    notJSON: '(not a JSON file)',
+    loaded: 'JSON loaded successfully',
+    transforming: 'Transforming content...',
+    completed: 'Transformation completed!',
+    downloadStarted: 'Download started:',
+    error: 'Error:',
+    settingsTooltip: 'Configure how JSON files should be transformed',
+    footnoteSettings: 'Footnote Settings (Dev Mode)',
+    footnoteLabel: 'Transform footnotes',
+    footnoteDesc: 'Converts footnotes to linked lists',
+    interviewMode: 'Interview Mode (Dev Mode)',
+    interviewLabel: 'List-to-Blockquote transformation',
+    interviewDesc: 'Converts lists (ol, ul) to blockquotes'
+  },
+  de: {
+    title: 'DIVI JSON Transformer',
+    subtitle: 'Verwandelt DIVI JSON-Exporte in besser strukturierte Layouts v2.0.6',
+    settings: 'Einstellungen',
+    processingMode: 'Verarbeitungsmodus',
+    normal: 'Normal',
+    advancedMode: 'Erweiterter Modus',
+    devMode: 'Dev-Modus (Beta)',
+    devModeDesc: 'Beinhaltet alle erweiterten Features plus Fußnoten und Interview-Transformationen',
+    splitAt: 'Trennen an:',
+    tagMerging: 'HTML-Säuberung',
+    tagMergingLabel: 'Fragmentierte Tags zusammenführen',
+    tagMergingDesc: 'Führt fragmentierte Tags (em, span) zusammen',
+    moduleSettings: 'Modul-Einstellungen',
+    maxModulesPerRow: 'Max Module pro Zeile:',
+    maxParagraphsPerModule: 'Max Absätze pro Text-Modul:',
+    noRowSplit: '(0 = keine Zeilentrennung)',
+    noModuleSplit: '(0 = keine Modultrennung)',
+    dropZone: 'Drag & Drop Zone',
+    dropZoneText: 'Klicken Sie hier, oder ziehen Sie JSON-Dateien hierher',
+    dropZoneSubtext: 'Unterstützt mehrere Dateien gleichzeitig',
+    status: 'Status',
+    ready: 'Bereit für Dateien...',
+    dragFiles: 'Ziehen Sie JSON-Dateien in den Bereich um sie zu verarbeiten.',
+    processing: 'Verarbeite:',
+    skipped: 'Übersprungen:',
+    notJSON: '(keine JSON-Datei)',
+    loaded: 'JSON erfolgreich geladen',
+    transforming: 'Transformiere Inhalte...',
+    completed: 'Transformation abgeschlossen!',
+    downloadStarted: 'Download gestartet:',
+    error: 'Fehler:',
+    settingsTooltip: 'Konfiguriere wie die JSON-Dateien transformiert werden sollen',
+    footnoteSettings: 'Fußnoten-Einstellungen (Dev-Modus)',
+    footnoteLabel: 'Fußnoten transformieren',
+    footnoteDesc: 'Wandelt Fußnoten in verlinkte Listen um',
+    interviewMode: 'Interview-Modus (Dev-Modus)',
+    interviewLabel: 'Liste-zu-Blockquote Transformation',
+    interviewDesc: 'Wandelt Listen (ol, ul) in Blockquotes um'
+  },
+  fr: { title: 'DIVI JSON Transformer', subtitle: 'Transforme les exports JSON DIVI v2.0.6', settings: 'Paramètres', processingMode: 'Mode', normal: 'Normal', advancedMode: 'Avancé', devMode: 'Dev (Beta)', devModeDesc: 'Inclut toutes les fonctionnalités avancées plus notes de bas de page', splitAt: 'Diviser à:', tagMerging: 'Nettoyage HTML', tagMergingLabel: 'Fusionner les balises', tagMergingDesc: 'Fusionne les balises (em, span)', moduleSettings: 'Paramètres des modules', maxModulesPerRow: 'Max modules/ligne:', maxParagraphsPerModule: 'Max paragraphes/module:', noRowSplit: '(0 = pas de division)', noModuleSplit: '(0 = pas de division)', dropZone: 'Zone Glisser-Déposer', dropZoneText: 'Cliquez ou glissez des fichiers JSON', dropZoneSubtext: 'Supporte plusieurs fichiers', status: 'Statut', ready: 'Prêt...', dragFiles: 'Glissez les fichiers JSON.', processing: 'Traitement:', skipped: 'Ignoré:', notJSON: '(pas JSON)', loaded: 'JSON chargé', transforming: 'Transformation...', completed: 'Terminé!', downloadStarted: 'Téléchargement:', error: 'Erreur:', settingsTooltip: 'Configuration', footnoteSettings: 'Notes (Dev)', footnoteLabel: 'Transformer notes', footnoteDesc: 'Convertit en listes liées', interviewMode: 'Interview (Dev)', interviewLabel: 'Liste vers Blockquote', interviewDesc: 'Convertit listes en blockquotes' },
+  es: { title: 'DIVI JSON Transformer', subtitle: 'Transforma exportaciones JSON DIVI v2.0.6', settings: 'Configuración', processingMode: 'Modo', normal: 'Normal', advancedMode: 'Avanzado', devMode: 'Dev (Beta)', devModeDesc: 'Incluye todas las funciones avanzadas más notas al pie', splitAt: 'Dividir en:', tagMerging: 'Limpieza HTML', tagMergingLabel: 'Fusionar etiquetas', tagMergingDesc: 'Fusiona etiquetas (em, span)', moduleSettings: 'Configuración de módulos', maxModulesPerRow: 'Máx módulos/fila:', maxParagraphsPerModule: 'Máx párrafos/módulo:', noRowSplit: '(0 = sin división)', noModuleSplit: '(0 = sin división)', dropZone: 'Zona Arrastrar', dropZoneText: 'Clic o arrastre archivos JSON', dropZoneSubtext: 'Admite múltiples archivos', status: 'Estado', ready: 'Listo...', dragFiles: 'Arrastra archivos JSON.', processing: 'Procesando:', skipped: 'Omitido:', notJSON: '(no JSON)', loaded: 'JSON cargado', transforming: 'Transformando...', completed: 'Completado!', downloadStarted: 'Descarga:', error: 'Error:', settingsTooltip: 'Configurar', footnoteSettings: 'Notas (Dev)', footnoteLabel: 'Transformar notas', footnoteDesc: 'Convierte en listas enlazadas', interviewMode: 'Entrevista (Dev)', interviewLabel: 'Lista a Blockquote', interviewDesc: 'Convierte listas en blockquotes' },
+  ar: { title: 'محول DIVI JSON', subtitle: 'تحويل صادرات DIVI JSON v2.0.6', settings: 'الإعدادات', processingMode: 'الوضع', normal: 'عادي', advancedMode: 'متقدم', devMode: 'مطور (Beta)', devModeDesc: 'يتضمن جميع الميزات المتقدمة بالإضافة إلى الحواشي', splitAt: 'تقسيم عند:', tagMerging: 'تنظيف HTML', tagMergingLabel: 'دمج العلامات', tagMergingDesc: 'يدمج العلامات (em, span)', moduleSettings: 'إعدادات الوحدة', maxModulesPerRow: 'الحد الأقصى للوحدات/صف:', maxParagraphsPerModule: 'الحد الأقصى للفقرات/وحدة:', noRowSplit: '(0 = بدون تقسيم)', noModuleSplit: '(0 = بدون تقسيم)', dropZone: 'منطقة السحب', dropZoneText: 'انقر أو اسحب ملفات JSON', dropZoneSubtext: 'يدعم ملفات متعددة', status: 'الحالة', ready: 'جاهز...', dragFiles: 'اسحب ملفات JSON.', processing: 'المعالجة:', skipped: 'تم التخطي:', notJSON: '(ليس JSON)', loaded: 'تم التحميل', transforming: 'التحويل...', completed: 'اكتمل!', downloadStarted: 'التنزيل:', error: 'خطأ:', settingsTooltip: 'تكوين', footnoteSettings: 'الحواشي (Dev)', footnoteLabel: 'تحويل الحواشي', footnoteDesc: 'يحول إلى قوائم مرتبطة', interviewMode: 'مقابلة (Dev)', interviewLabel: 'قائمة إلى اقتباس', interviewDesc: 'يحول القوائم إلى اقتباسات' },
+  it: { title: 'DIVI JSON Transformer', subtitle: 'Trasforma esportazioni JSON DIVI v2.0.6', settings: 'Impostazioni', processingMode: 'Modalità', normal: 'Normale', advancedMode: 'Avanzata', devMode: 'Dev (Beta)', devModeDesc: 'Include tutte le funzionalità avanzate più note a piè di pagina', splitAt: 'Dividi a:', tagMerging: 'Pulizia HTML', tagMergingLabel: 'Unisci tag', tagMergingDesc: 'Unisce i tag (em, span)', moduleSettings: 'Impostazioni moduli', maxModulesPerRow: 'Max moduli/riga:', maxParagraphsPerModule: 'Max paragrafi/modulo:', noRowSplit: '(0 = nessuna divisione)', noModuleSplit: '(0 = nessuna divisione)', dropZone: 'Zona Trascina', dropZoneText: 'Clicca o trascina file JSON', dropZoneSubtext: 'Supporta più file', status: 'Stato', ready: 'Pronto...', dragFiles: 'Trascina file JSON.', processing: 'Elaborazione:', skipped: 'Saltato:', notJSON: '(non JSON)', loaded: 'JSON caricato', transforming: 'Trasformazione...', completed: 'Completato!', downloadStarted: 'Download:', error: 'Errore:', settingsTooltip: 'Configura', footnoteSettings: 'Note (Dev)', footnoteLabel: 'Trasforma note', footnoteDesc: 'Converte in elenchi collegati', interviewMode: 'Intervista (Dev)', interviewLabel: 'Lista a Blockquote', interviewDesc: 'Converte elenchi in blockquote' },
+  ru: { title: 'DIVI JSON Transformer', subtitle: 'Преобразование экспортов DIVI JSON v2.0.6', settings: 'Настройки', processingMode: 'Режим', normal: 'Обычный', advancedMode: 'Расширенный', devMode: 'Dev (Beta)', devModeDesc: 'Включает все расширенные функции плюс сноски', splitAt: 'Разделить на:', tagMerging: 'Очистка HTML', tagMergingLabel: 'Объединить теги', tagMergingDesc: 'Объединяет теги (em, span)', moduleSettings: 'Настройки модуля', maxModulesPerRow: 'Макс модулей/строка:', maxParagraphsPerModule: 'Макс абзацев/модуль:', noRowSplit: '(0 = без разделения)', noModuleSplit: '(0 = без разделения)', dropZone: 'Зона перетаскивания', dropZoneText: 'Нажмите или перетащите JSON', dropZoneSubtext: 'Поддерживает несколько файлов', status: 'Статус', ready: 'Готов...', dragFiles: 'Перетащите JSON файлы.', processing: 'Обработка:', skipped: 'Пропущено:', notJSON: '(не JSON)', loaded: 'JSON загружен', transforming: 'Преобразование...', completed: 'Завершено!', downloadStarted: 'Загрузка:', error: 'Ошибка:', settingsTooltip: 'Настроить', footnoteSettings: 'Сноски (Dev)', footnoteLabel: 'Преобразовать сноски', footnoteDesc: 'Преобразует в связанные списки', interviewMode: 'Интервью (Dev)', interviewLabel: 'Список в Blockquote', interviewDesc: 'Преобразует списки в blockquote' },
+  nl: { title: 'DIVI JSON Transformer', subtitle: 'Transformeer DIVI JSON-exports v2.0.6', settings: 'Instellingen', processingMode: 'Modus', normal: 'Normaal', advancedMode: 'Geavanceerd', devMode: 'Dev (Beta)', devModeDesc: 'Bevat alle geavanceerde functies plus voetnoten', splitAt: 'Splitsen bij:', tagMerging: 'HTML-opschoning', tagMergingLabel: 'Tags samenvoegen', tagMergingDesc: 'Voegt tags samen (em, span)', moduleSettings: 'Module-instellingen', maxModulesPerRow: 'Max modules/rij:', maxParagraphsPerModule: 'Max alinea\'s/module:', noRowSplit: '(0 = geen splitsing)', noModuleSplit: '(0 = geen splitsing)', dropZone: 'Sleep Zone', dropZoneText: 'Klik of sleep JSON-bestanden', dropZoneSubtext: 'Ondersteunt meerdere bestanden', status: 'Status', ready: 'Klaar...', dragFiles: 'Sleep JSON-bestanden.', processing: 'Verwerken:', skipped: 'Overgeslagen:', notJSON: '(geen JSON)', loaded: 'JSON geladen', transforming: 'Transformeren...', completed: 'Voltooid!', downloadStarted: 'Download:', error: 'Fout:', settingsTooltip: 'Configureer', footnoteSettings: 'Voetnoten (Dev)', footnoteLabel: 'Voetnoten transformeren', footnoteDesc: 'Converteert naar gekoppelde lijsten', interviewMode: 'Interview (Dev)', interviewLabel: 'Lijst naar Blockquote', interviewDesc: 'Converteert lijsten naar blockquotes' }
+}
+export function useTranslation(language: Language): Translations {
+  return translations[language]
+}

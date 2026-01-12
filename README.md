@@ -102,7 +102,6 @@ Perfect for:
 3. Drag the JSON file into the drop zone
 4. Import the `*_output.json` back into DIVI
 
-
 ## 🆓 License
 
 This tool is provided as-is, free to use for personal and commercial projects.

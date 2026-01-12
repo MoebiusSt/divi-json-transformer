@@ -2,6 +2,8 @@
 
 https://github.com/MoebiusSt/divi-json-transformer
 
+![App Screenshot](screenshots/divi-json-transformer-screenshot.jpg)
+
 ## ✨ Features
 
 - **Split Content**: Automatically split large text modules at HTML elements (H1, H2, H3, H4, H5, H6, Blockquote, OL, UL)

@@ -121,6 +121,8 @@ function processHTML(html: string, specialTransform: boolean, settings: Transfor
   const body = doc.body
   if (settings.processFootnotes) processFootnotes(body, log)
   if (settings.processInterviewLists || specialTransform) transformListsToBlockquotes(body, log)
+  if (settings.fixLinkIcons) fixLinkIcons(body, log)
+  if (settings.removeEmptySpans) removeEmptySpans(body, log)
   if (settings.processTagMerging) mergeFragmentedTags(body, log)
   let processedHTML = body.innerHTML
   const splitResults = splitTextAtSplits(processedHTML, settings, log)
@@ -288,9 +290,44 @@ function transformListsToBlockquotes(body: HTMLElement, _log: LogFunction): void
   }
 }
 
+function removeEmptySpans(body: HTMLElement, _log: LogFunction): void {
+  const spans = Array.from(body.querySelectorAll('span'))
+  for (const span of spans) {
+    if (span.attributes.length === 0) {
+      // Replace with its children
+      while (span.firstChild) {
+        span.parentNode?.insertBefore(span.firstChild, span)
+      }
+      span.remove()
+    }
+  }
+}
+
+function fixLinkIcons(body: HTMLElement, _log: LogFunction): void {
+  const links = Array.from(body.querySelectorAll('a'))
+  for (const link of links) {
+    const prev = link.previousSibling
+    if (prev && prev.nodeType === Node.ELEMENT_NODE && (prev as Element).tagName.toLowerCase() === 'span') {
+      const span = prev as HTMLElement
+      const text = span.textContent || ''
+      // Check for specific arrow icon \uf0da () or other common arrows, plus optional spaces/nbsp
+      if (/^[\s\u00a0]*[\uf0da\uf105\u203a][\s\u00a0]*$/.test(text)) {
+        link.classList.add('link-icon')
+        span.remove()
+      }
+    }
+  }
+}
+
 function mergeFragmentedTags(body: HTMLElement, _log: LogFunction): void {
   const tagNames = ['em', 'span']
-  const containers = Array.from(body.querySelectorAll('p, li, blockquote, div'))
+  // Find all potential containers by looking at parents of target tags
+  const tags = Array.from(body.querySelectorAll(tagNames.join(', ')))
+  const containers = new Set<Element>()
+  tags.forEach(tag => {
+    if (tag.parentElement) containers.add(tag.parentElement)
+  })
+
   for (const container of containers) {
     for (const tagName of tagNames) {
       const tags = Array.from(container.querySelectorAll(`:scope > ${tagName}`))
@@ -304,9 +341,14 @@ function mergeFragmentedTags(body: HTMLElement, _log: LogFunction): void {
           const lastTag = currentGroup[currentGroup.length - 1]
           const lastClass = lastTag.className
           const currentClass = tag.className
-          if (lastClass === currentClass && lastTag.nextSibling === tag) {
-            currentGroup.push(tag)
-          } else if (lastClass === currentClass && lastTag.nextSibling?.nodeType === Node.TEXT_NODE && (lastTag.nextSibling.textContent || '').trim() === '' && lastTag.nextSibling.nextSibling === tag) {
+          
+          // Check adjacency
+          const isAdjacent = lastTag.nextSibling === tag
+          const isSeparatedByEmptyText = lastTag.nextSibling?.nodeType === Node.TEXT_NODE && 
+                                       (lastTag.nextSibling.textContent || '').trim() === '' && 
+                                       lastTag.nextSibling.nextSibling === tag
+          
+          if (lastClass === currentClass && (isAdjacent || isSeparatedByEmptyText)) {
             currentGroup.push(tag)
           } else {
             if (currentGroup.length > 1) groups.push([...currentGroup])
@@ -322,6 +364,7 @@ function mergeFragmentedTags(body: HTMLElement, _log: LogFunction): void {
         for (let i = 0; i < group.length; i++) {
           const tag = group[i]
           mergedContent += tag.innerHTML
+          // Add whitespace if it existed between tags
           if (i < group.length - 1 && tag.nextSibling?.nodeType === Node.TEXT_NODE) {
             const whitespace = tag.nextSibling.textContent || ''
             if (whitespace.trim() === '') mergedContent += whitespace
@@ -330,6 +373,7 @@ function mergeFragmentedTags(body: HTMLElement, _log: LogFunction): void {
         first.innerHTML = mergedContent
         for (let i = 1; i < group.length; i++) {
           const tag = group[i]
+          // Remove empty text nodes between merged tags
           if (tag.previousSibling?.nodeType === Node.TEXT_NODE) {
             const text = tag.previousSibling.textContent || ''
             if (text.trim() === '') tag.previousSibling.remove()

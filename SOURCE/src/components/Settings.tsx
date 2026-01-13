@@ -117,6 +117,24 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
                 </div>
               </div>
             </div>
+
+            <div className="space-y-3 border-t pt-4">
+              <Label className="text-base font-semibold">Extra (Dev)</Label>
+              <div className="flex items-start space-x-2">
+                <Checkbox id="removeEmptySpans" checked={settings.removeEmptySpans} onCheckedChange={(checked) => updateSettings({ removeEmptySpans: !!checked })} />
+                <div className="space-y-1">
+                  <Label htmlFor="removeEmptySpans" className="font-normal cursor-pointer">{t.removeEmptySpansLabel}</Label>
+                  <p className="text-sm text-gray-500">{t.removeEmptySpansDesc}</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-2">
+                <Checkbox id="fixLinkIcons" checked={settings.fixLinkIcons} onCheckedChange={(checked) => updateSettings({ fixLinkIcons: !!checked })} />
+                <div className="space-y-1">
+                  <Label htmlFor="fixLinkIcons" className="font-normal cursor-pointer">{t.fixLinkIconsLabel}</Label>
+                  <p className="text-sm text-gray-500">{t.fixLinkIconsDesc}</p>
+                </div>
+              </div>
+            </div>
           </>
         )}
 

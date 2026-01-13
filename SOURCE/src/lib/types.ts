@@ -14,6 +14,8 @@ export interface TransformSettings {
   processFootnotes: boolean
   processInterviewLists: boolean
   processTagMerging: boolean
+  removeEmptySpans: boolean
+  fixLinkIcons: boolean
   maxModulesPerRow: number
   maxParagraphsPerModule: number
 }
@@ -34,6 +36,8 @@ export const defaultSettings: TransformSettings = {
   processFootnotes: false,
   processInterviewLists: false,
   processTagMerging: true,
+  removeEmptySpans: false,
+  fixLinkIcons: false,
   maxModulesPerRow: 2,
   maxParagraphsPerModule: 0
 }

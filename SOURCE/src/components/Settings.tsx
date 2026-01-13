@@ -23,8 +23,7 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
   const updateSplits = (key: keyof TransformSettings['splits'], value: boolean) => {
     onSettingsChange({ ...settings, splits: { ...settings.splits, [key]: value } })
   }
-  const isDevMode = settings.mode === 'dev'
-  const isAdvancedOrDev = settings.mode === 'advanced' || settings.mode === 'dev'
+  const isAdvanced = settings.mode === 'advanced'
   
   return (
     <Card>
@@ -42,7 +41,7 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
       <CardContent className="space-y-6">
         <div className="space-y-3">
           <Label className="text-base font-semibold">{t.processingMode}</Label>
-          <RadioGroup value={settings.mode} onValueChange={(value: 'normal' | 'advanced' | 'dev') => updateSettings({ mode: value })}>
+          <RadioGroup value={settings.mode} onValueChange={(value: 'normal' | 'advanced') => updateSettings({ mode: value })}>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="normal" id="normal" />
               <Label htmlFor="normal" className="font-normal cursor-pointer">{t.normal}</Label>
@@ -51,17 +50,20 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
               <RadioGroupItem value="advanced" id="advanced" />
               <Label htmlFor="advanced" className="font-normal cursor-pointer">{t.advancedMode}</Label>
             </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="dev" id="dev" />
-              <Label htmlFor="dev" className="font-normal cursor-pointer">{t.devMode}</Label>
-            </div>
           </RadioGroup>
-          {isDevMode && (
-            <Alert className="bg-blue-50 border-blue-200">
-              <Info className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-sm text-blue-800">{t.devModeDesc}</AlertDescription>
-            </Alert>
-          )}
+
+          <div className="pt-2 border-t mt-2">
+             <div className="flex items-center space-x-2">
+                <Checkbox id="privateFunctions" checked={settings.showPrivateFunctions} onCheckedChange={(checked) => updateSettings({ showPrivateFunctions: !!checked })} />
+                <Label htmlFor="privateFunctions" className="font-normal cursor-pointer">{t.privateFunctions}</Label>
+             </div>
+             {settings.showPrivateFunctions && (
+                <Alert className="bg-blue-50 border-blue-200 mt-2">
+                  <Info className="h-4 w-4 text-blue-600" />
+                  <AlertDescription className="text-sm text-blue-800">{t.privateFunctionsDesc}</AlertDescription>
+                </Alert>
+             )}
+          </div>
         </div>
 
         <div className="space-y-3">
@@ -76,7 +78,7 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
           </div>
         </div>
 
-        {isAdvancedOrDev && (
+        {isAdvanced && (
           <div className="space-y-3 border-t pt-4">
             <Label className="text-base font-semibold">{t.moduleSettings}</Label>
             <div className="space-y-4">
@@ -94,7 +96,7 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
           </div>
         )}
 
-        {isDevMode && (
+        {settings.showPrivateFunctions && (
           <>
             <div className="space-y-3 border-t pt-4">
               <Label className="text-base font-semibold">{t.footnoteSettings}</Label>
@@ -119,7 +121,7 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
             </div>
 
             <div className="space-y-3 border-t pt-4">
-              <Label className="text-base font-semibold">Extra (Dev)</Label>
+              <Label className="text-base font-semibold">Extra</Label>
               <div className="flex items-start space-x-2">
                 <Checkbox id="removeEmptySpans" checked={settings.removeEmptySpans} onCheckedChange={(checked) => updateSettings({ removeEmptySpans: !!checked })} />
                 <div className="space-y-1">

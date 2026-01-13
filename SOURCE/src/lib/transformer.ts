@@ -28,11 +28,8 @@ function processMarkup(markupString: string, settings: TransformSettings, log: L
   const textModules = findTextModules(markupString)
   if (textModules.length === 0) return markupString
   
-  if (settings.mode === 'advanced' || settings.mode === 'dev') {
-    const rowMatch = markupString.match(/\[et_pb_row(.*?)\]/)
-    const originalRowAttributes = rowMatch ? rowMatch[1] : ''
-    const columnAttributes = extractColumnAttributes(markupString)
-    return processMarkupAdvancedMode(markupString, textModules, originalRowAttributes, columnAttributes, settings, log)
+  if (settings.mode === 'advanced') {
+    return processMarkupAdvancedMode(markupString, settings, log)
   } else {
     return processMarkupNormalMode(markupString, textModules, settings, log)
   }
@@ -67,52 +64,76 @@ function processMarkupNormalMode(originalMarkup: string, textModules: string[], 
   return newMarkup
 }
 
-function processMarkupAdvancedMode(markupString: string, textModules: string[], originalRowAttributes: string, columnAttributes: string, settings: TransformSettings, log: LogFunction): string {
-  const allProcessedModules: Array<{ html: string; paragraphCount: number }> = []
-  for (const module of textModules) {
-    const { content } = extractContentFromModule(module)
-    if (!content) continue
-    const tagMatch = module.match(/\[et_pb_text[^\]]*\]/)
-    if (!tagMatch) continue
-    let fullTag = tagMatch[0].slice(1, -1)
-    const processedModules = processHTML(content, false, settings, log)
+function processMarkupAdvancedMode(markupString: string, settings: TransformSettings, log: LogFunction): string {
+  // Use replace with callback to process modules in-place while having access to offset
+  return markupString.replace(/\[et_pb_text[^\]]*\](?:(?!\[\/et_pb_text\]).)*\[\/et_pb_text\]/gs, (match, offset, string) => {
+    const { content } = extractContentFromModule(match)
+    if (!content) return match
+
+    const tagMatch = match.match(/\[et_pb_text[^\]]*\]/)
+    if (!tagMatch) return match
+    const fullTag = tagMatch[0].slice(1, -1)
+
+    const processedModules = processHTML(content, false, settings, log) as Array<{ html: string; paragraphCount: number }>
+
+    if (processedModules.length === 0) return match
+
+    // Convert to array of full module strings
+    const chunks: string[] = []
     for (const moduleInfo of processedModules) {
-      const moduleHTML = typeof moduleInfo === 'string' ? moduleInfo : moduleInfo.html
-      const paragraphCount = typeof moduleInfo === 'string' ? 0 : moduleInfo.paragraphCount
-      const adminLabel = createAdminLabel(moduleHTML)
-      const cleanTag = fullTag.replace(/admin_label="[^"]*"/g, '')
-      const moduleTag = cleanTag.trim() + ` admin_label="${adminLabel}"`
-      allProcessedModules.push({ html: `[${moduleTag}]${moduleHTML}[/et_pb_text]`, paragraphCount })
+        const moduleHTML = moduleInfo.html
+        const adminLabel = createAdminLabel(moduleHTML)
+        const cleanTag = fullTag.replace(/admin_label="[^"]*"/g, '')
+        const moduleTag = cleanTag.trim() + ` admin_label="${adminLabel}"`
+        chunks.push(`[${moduleTag}]${moduleHTML}[/et_pb_text]`)
     }
-  }
-  const rows: string[] = []
-  let currentRow: string[] = []
-  let moduleCountInRow = 0
-  let rowCount = 1
-  for (const module of allProcessedModules) {
-    currentRow.push(module.html)
-    moduleCountInRow++
-    if (settings.maxModulesPerRow > 0 && moduleCountInRow >= settings.maxModulesPerRow) {
-      rows.push(wrapInRow(currentRow, rowCount, originalRowAttributes, columnAttributes))
-      currentRow = []
-      moduleCountInRow = 0
-      rowCount++
+
+    // Check if Row Splitting is needed
+    if (settings.maxModulesPerRow > 0 && chunks.length > settings.maxModulesPerRow) {
+        // Search backwards from 'offset' for [et_pb_row ...] and [et_pb_column ...]
+        const precedingText = string.substring(0, offset)
+        
+        // Find last Row (closest to the module)
+        // We use a regex that matches the tag and ensures no other [et_pb_row starts after it
+        const rowMatch = precedingText.match(/\[et_pb_row([^\]]*)\](?:(?!\[et_pb_row).)*$/s)
+        let rowAttrs = rowMatch ? rowMatch[1] : ''
+        
+        // Find last Column
+        const colMatch = precedingText.match(/\[et_pb_column([^\]]*)\](?:(?!\[et_pb_column).)*$/s)
+        let colAttrs = colMatch ? colMatch[1] : ''
+
+        // Clean attributes for re-use (remove admin_label to avoid duplicates/confusion if we wanted, 
+        // but keeping them or modifying them might be better. 
+        // Let's add a specialized label for the continuation rows)
+        
+        // Actually, for the new row, we probably want a generic label or "Fortsetzung"
+        // But simply copying attributes is safer for layout preservation.
+        // We will append a new admin_label to overwrite the old one if needed, or let the user handle it.
+        // To be safe, let's update the admin_label for the new rows to indicate they are continuations.
+        if (rowAttrs.includes('admin_label="')) {
+           rowAttrs = rowAttrs.replace(/admin_label="([^"]*)"/, 'admin_label="$1 (Fortsetzung)"')
+        } else {
+           rowAttrs += ' admin_label="Fortsetzung"'
+        }
+
+        let result = ''
+        
+        for (let i = 0; i < chunks.length; i++) {
+            // If we filled a row, close it and start a new one
+            // BUT: The first chunk(s) stay in the current row/column.
+            // So we only insert breaks AFTER the first set of modules.
+            
+            if (i > 0 && i % settings.maxModulesPerRow === 0) {
+                 result += `[/et_pb_column][/et_pb_row][et_pb_row${rowAttrs}][et_pb_column${colAttrs}]`
+            }
+            result += chunks[i]
+        }
+        return result
+    } else {
+        // No row splitting needed, just replace the module with the split modules
+        return chunks.join('')
     }
-  }
-  if (currentRow.length > 0) {
-    rows.push(wrapInRow(currentRow, rowCount, originalRowAttributes, columnAttributes))
-  }
-  const rowPattern = /\[et_pb_row.*?\[\/et_pb_row\]/s
-  const rowMatch = markupString.match(rowPattern)
-  if (rowMatch) {
-    let result = markupString.replace(rowMatch[0], rows.join(''))
-    for (const module of textModules) {
-      result = result.replace(module, '')
-    }
-    return result
-  } else {
-    return markupString + rows.join('')
-  }
+  })
 }
 
 function processHTML(html: string, specialTransform: boolean, settings: TransformSettings, log: LogFunction): Array<string | { html: string; paragraphCount: number }> {
@@ -143,8 +164,9 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
   if (settings.splits.blockquote) splitTags.push('blockquote')
   if (settings.splits.ol) splitTags.push('ol')
   if (settings.splits.ul) splitTags.push('ul')
+  
   if (splitTags.length === 0) {
-    if (settings.mode === 'advanced' || settings.mode === 'dev') return [{ html, paragraphCount: countParagraphs(html) }]
+    if (settings.mode === 'advanced') return [{ html, paragraphCount: countParagraphs(html) }]
     return [html]
   }
   const allElements = Array.from(body.children)
@@ -159,7 +181,7 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
     const shouldSplit = splitPoints.includes(element)
     if (shouldSplit && currentModule.length > 0) {
       const moduleHTML = currentModule.join('')
-      if (settings.mode === 'advanced' || settings.mode === 'dev') {
+      if (settings.mode === 'advanced') {
         newModules.push({ html: moduleHTML, paragraphCount })
       } else {
         newModules.push(moduleHTML)
@@ -169,7 +191,7 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
     } else {
       currentModule.push(element.outerHTML)
       if (element.tagName.toLowerCase() === 'p') paragraphCount++
-      if ((settings.mode === 'advanced' || settings.mode === 'dev') && element.tagName.toLowerCase() === 'p' && settings.maxParagraphsPerModule > 0 && paragraphCount >= settings.maxParagraphsPerModule && currentModule.length > 0) {
+      if (settings.mode === 'advanced' && element.tagName.toLowerCase() === 'p' && settings.maxParagraphsPerModule > 0 && paragraphCount >= settings.maxParagraphsPerModule && currentModule.length > 0) {
         const moduleHTML = currentModule.join('')
         newModules.push({ html: moduleHTML, paragraphCount })
         currentModule = []
@@ -179,14 +201,14 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
   }
   if (currentModule.length > 0) {
     const moduleHTML = currentModule.join('')
-    if (settings.mode === 'advanced' || settings.mode === 'dev') {
+    if (settings.mode === 'advanced') {
       newModules.push({ html: moduleHTML, paragraphCount })
     } else {
       newModules.push(moduleHTML)
     }
   }
   if (newModules.length === 0) {
-    if (settings.mode === 'advanced' || settings.mode === 'dev') return [{ html, paragraphCount: 0 }]
+    if (settings.mode === 'advanced') return [{ html, paragraphCount: 0 }]
     return [html]
   }
   return newModules
@@ -401,36 +423,6 @@ function extractContentFromModule(module: string): { content: string; attributes
   const attributesMatch = module.match(/\[et_pb_text(.*?)content_desktop/s)
   const attributes = attributesMatch ? attributesMatch[1] : ' '
   return { content, attributes }
-}
-
-function extractColumnAttributes(markupString: string): string {
-  const match = markupString.match(/\[et_pb_column(.*?)\]/)
-  return match ? match[1] : ''
-}
-
-function wrapInRow(modules: string[], rowNumber: number, originalRowAttributes: string, columnAttributes: string): string {
-  let attributes = ` admin_label="Zeile ${rowNumber}"`
-  if (originalRowAttributes && originalRowAttributes.trim()) {
-    let cleaned = originalRowAttributes.replace(/admin_label="[^"]*"/g, '').trim()
-    cleaned = sanitizeAttributes(cleaned)
-    if (cleaned) attributes += ` ${cleaned}`
-  }
-  let row = `[et_pb_row${attributes}]`
-  if (columnAttributes && columnAttributes.trim()) {
-    const sanitized = sanitizeAttributes(columnAttributes)
-    row += `[et_pb_column${sanitized}]`
-  } else {
-    row += '[et_pb_column type="4_4" parallax="off" parallax_method="on"]'
-  }
-  row += modules.join('')
-  row += '[/et_pb_column][/et_pb_row]'
-  return row
-}
-
-function sanitizeAttributes(attributes: string): string {
-  let sanitized = attributes.replace(/="([^"]*)\[(.*?)\]([^"]*)"/g, '="$1($2)$3"')
-  sanitized = sanitized.replace(/="([^"]*)\"([^"]*)"/g, "=\"$1'$2\"")
-  return sanitized
 }
 
 function countParagraphs(html: string): number {

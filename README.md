@@ -7,10 +7,10 @@ https://github.com/MoebiusSt/divi-json-transformer
 ## ✨ Features
 
 - **Split Content**: Automatically split large text modules at HTML elements (H1, H2, H3, H4, H5, H6, Blockquote, OL, UL)
-- **Three Modes**: 
+- **Processing Modes**: 
   - **Normal Mode**: Basic splitting at headlines 
   - **Advanced Mode**: Additional control over module paragraph counts and also splits into new DIVI rows if needed.
-  - **Dev Mode (Beta)**: Includes footnote transformation and "Interview Mode" (list-to-blockquote) for specific internal workflows.
+- **Private Functions**: Experimental features for specific internal workflows (Footnotes, Interview Mode).
 - **HTML Cleanup**: Merges fragmented tags (em, span) for cleaner code
 - **Built-in Help**: Click the "?" button to view full documentation inside the app
 - **Multi-Language Support**: Available in 8 languages
@@ -52,10 +52,11 @@ https://github.com/MoebiusSt/divi-json-transformer
 - **Max Paragraphs per Module**: Split modules after X paragraphs (0 = no module splitting)
 - Better control for complex layouts
 
-### Dev Mode (Beta)
-- All features of Advanced Mode, plus:
+### Private Functions (Experimental)
+- Enable via checkbox to access:
 - **Footnote Transformation**: Converts footnotes and indices in text into a linked footnote list.
 - **Interview Mode**: Converts lists (OL, UL) into blockquotes (for specific interview layouts).
+- **Extra Cleanup**: Remove empty spans, fix link icons.
 
 ### HTML Cleanup
 - **Merge Fragmented Tags**: Combines consecutive `<em>` and `<span>` tags with the same attributes

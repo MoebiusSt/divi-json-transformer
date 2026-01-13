@@ -93,7 +93,11 @@ Der InDesign-Export erzeugt für die meisten **Zwischenüberschriften im Artikel
 
 ---
 
-## DEV-Mode : Interview-Modus (nur für Eigengebrauch in Zwiefach.de)
+## Private Funktionen (experimentell / für internen Gebrauch)
+
+Diese Funktionen sind standardmäßig ausgeblendet und können über die Checkbox **"Private Funktionen"** aktiviert werden.
+
+### Interview-Modus (nur für Eigengebrauch in Zwiefach.de)
 
 Der Interview-Modus ist eine **Spezialfunktion für Zwiefach-Interview-Artikel**.
 
@@ -103,13 +107,18 @@ Bei Zwiefach-Interviews werden Fragen und Antworten manchmal als Listenelemente 
 
 **Wichtig:** Diesen Modus nur bei Interview-Artikeln für Zwiefach aktivieren – bei normalen Artikeln würde er reguläre Aufzählungen ungewollt in Zitate verwandeln.
 
----
-
-## Weitere Optionen
-
-### DEV-Mode : Fußnoten transformieren
+### Fußnoten transformieren
 
 Verarbeitet Fußnotenmarkierungen und Indizes im Text und erstellt eine hin- und rückverlinkte Fußnotenliste! Ist aber auch Eigengebrauch-Spezifisch nur für den Internene GEbracuh da er bestimmte HTML-Strukturen vorzufinden sucht und von Dritten angepasst werden müsste. Falls entsprechdende Fußnoten-Strukturen vorhanden sind, werden diese schön querverlinkt.
+
+### Weitere Optionen
+
+- **Leere Spans entfernen**: Entfernt leere `<span>`-Tags.
+- **Link-Icons reparieren**: Verschiebt Icon-Spans in Link-Klassen.
+
+---
+
+## Weitere Optionen (Standard)
 
 ### Fragmentierte Tags zusammenführen
 
@@ -144,8 +153,9 @@ Für einen typischen Artikel aus InDesign:
   - ❌ Blockquote
   - ❌ OL, UL
 - **Max. Module pro Zeile:** 2 (oder nach Bedarf)
-- **Interview-Modus:** ❌ Aus (außer bei Zwiefach-Interviews)
-- **Fußnoten transformieren:** ✅ An
+- **Private Funktionen:** ✅ An (falls benötigt)
+  - **Interview-Modus:** ❌ Aus (außer bei Zwiefach-Interviews)
+  - **Fußnoten transformieren:** ✅ An
 - **Fragmentierte Tags zusammenführen:** ✅ An
 
 ### Schritt 4: Datei verarbeiten

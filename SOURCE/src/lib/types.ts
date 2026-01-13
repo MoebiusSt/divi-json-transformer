@@ -1,5 +1,6 @@
 export interface TransformSettings {
-  mode: 'normal' | 'advanced' | 'dev'
+  mode: 'normal' | 'advanced'
+  showPrivateFunctions: boolean
   splits: {
     h1: boolean
     h2: boolean
@@ -22,6 +23,7 @@ export interface TransformSettings {
 
 export const defaultSettings: TransformSettings = {
   mode: 'advanced',
+  showPrivateFunctions: false,
   splits: {
     h1: true,
     h2: true,

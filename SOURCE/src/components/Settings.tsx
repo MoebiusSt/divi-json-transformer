@@ -136,6 +136,13 @@ export function Settings({ settings, onSettingsChange, language }: SettingsProps
                   <p className="text-sm text-gray-500">{t.fixLinkIconsDesc}</p>
                 </div>
               </div>
+              <div className="flex items-start space-x-2">
+                <Checkbox id="boldAuthorTerms" checked={settings.boldAuthorTerms} onCheckedChange={(checked) => updateSettings({ boldAuthorTerms: !!checked })} />
+                <div className="space-y-1">
+                  <Label htmlFor="boldAuthorTerms" className="font-normal cursor-pointer">{t.boldAuthorTermsLabel}</Label>
+                  <p className="text-sm text-gray-500">{t.boldAuthorTermsDesc}</p>
+                </div>
+              </div>
             </div>
           </>
         )}

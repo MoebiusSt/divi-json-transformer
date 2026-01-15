@@ -17,6 +17,7 @@ export interface TransformSettings {
   processTagMerging: boolean
   removeEmptySpans: boolean
   fixLinkIcons: boolean
+  boldAuthorTerms: boolean
   maxModulesPerRow: number
   maxParagraphsPerModule: number
 }
@@ -40,6 +41,7 @@ export const defaultSettings: TransformSettings = {
   processTagMerging: true,
   removeEmptySpans: false,
   fixLinkIcons: false,
+  boldAuthorTerms: false,
   maxModulesPerRow: 2,
   maxParagraphsPerModule: 0
 }

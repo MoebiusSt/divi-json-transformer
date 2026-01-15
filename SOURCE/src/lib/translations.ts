@@ -45,6 +45,8 @@ export interface Translations {
   removeEmptySpansDesc: string
   fixLinkIconsLabel: string
   fixLinkIconsDesc: string
+  boldAuthorTermsLabel: string
+  boldAuthorTermsDesc: string
 }
 
 export const translations: Record<Language, Translations> = {
@@ -92,7 +94,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Remove empty Spans',
     removeEmptySpansDesc: 'Removes span tags without attributes',
     fixLinkIconsLabel: 'Fix Link Icons',
-    fixLinkIconsDesc: 'Moves icon spans into link classes'
+    fixLinkIconsDesc: 'Moves icon spans into link classes',
+    boldAuthorTermsLabel: "Bold 'Text:' & 'Photos' in author line",
+    boldAuthorTermsDesc: "Wraps author terms in strong tags"
   },
   de: {
     title: 'DIVI JSON Transformer',
@@ -138,7 +142,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Leere Spans entfernen',
     removeEmptySpansDesc: 'Entfernt Span-Tags ohne Attribute',
     fixLinkIconsLabel: 'Link-Icons reparieren',
-    fixLinkIconsDesc: 'Verschiebt Icon-Spans in Link-Klassen'
+    fixLinkIconsDesc: 'Verschiebt Icon-Spans in Link-Klassen',
+    boldAuthorTermsLabel: "Fette 'Text:' & 'Fotos' in Autorenzeile",
+    boldAuthorTermsDesc: "Umschließt Autoren-Begriffe mit strong-Tags"
   },
   fr: {
     title: 'DIVI JSON Transformer',
@@ -184,7 +190,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Remove empty Spans',
     removeEmptySpansDesc: 'Removes span tags without attributes',
     fixLinkIconsLabel: 'Fix Link Icons',
-    fixLinkIconsDesc: 'Moves icon spans into link classes'
+    fixLinkIconsDesc: 'Moves icon spans into link classes',
+    boldAuthorTermsLabel: "Bold 'Text:' & 'Photos' in author line",
+    boldAuthorTermsDesc: "Wraps author terms in strong tags"
   },
   es: {
     title: 'DIVI JSON Transformer',
@@ -230,7 +238,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Remove empty Spans',
     removeEmptySpansDesc: 'Removes span tags without attributes',
     fixLinkIconsLabel: 'Fix Link Icons',
-    fixLinkIconsDesc: 'Moves icon spans into link classes'
+    fixLinkIconsDesc: 'Moves icon spans into link classes',
+    boldAuthorTermsLabel: "Bold 'Text:' & 'Photos' in author line",
+    boldAuthorTermsDesc: "Wraps author terms in strong tags"
   },
   ar: {
     title: 'محول DIVI JSON',
@@ -276,7 +286,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Remove empty Spans',
     removeEmptySpansDesc: 'Removes span tags without attributes',
     fixLinkIconsLabel: 'Fix Link Icons',
-    fixLinkIconsDesc: 'Moves icon spans into link classes'
+    fixLinkIconsDesc: 'Moves icon spans into link classes',
+    boldAuthorTermsLabel: "Bold 'Text:' & 'Photos' in author line",
+    boldAuthorTermsDesc: "Wraps author terms in strong tags"
   },
   it: {
     title: 'DIVI JSON Transformer',
@@ -322,7 +334,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Remove empty Spans',
     removeEmptySpansDesc: 'Removes span tags without attributes',
     fixLinkIconsLabel: 'Fix Link Icons',
-    fixLinkIconsDesc: 'Moves icon spans into link classes'
+    fixLinkIconsDesc: 'Moves icon spans into link classes',
+    boldAuthorTermsLabel: "Bold 'Text:' & 'Photos' in author line",
+    boldAuthorTermsDesc: "Wraps author terms in strong tags"
   },
   ru: {
     title: 'DIVI JSON Transformer',
@@ -368,7 +382,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Remove empty Spans',
     removeEmptySpansDesc: 'Removes span tags without attributes',
     fixLinkIconsLabel: 'Fix Link Icons',
-    fixLinkIconsDesc: 'Moves icon spans into link classes'
+    fixLinkIconsDesc: 'Moves icon spans into link classes',
+    boldAuthorTermsLabel: "Bold 'Text:' & 'Photos' in author line",
+    boldAuthorTermsDesc: "Wraps author terms in strong tags"
   },
   nl: {
     title: 'DIVI JSON Transformer',
@@ -414,7 +430,9 @@ export const translations: Record<Language, Translations> = {
     removeEmptySpansLabel: 'Remove empty Spans',
     removeEmptySpansDesc: 'Removes span tags without attributes',
     fixLinkIconsLabel: 'Fix Link Icons',
-    fixLinkIconsDesc: 'Moves icon spans into link classes'
+    fixLinkIconsDesc: 'Moves icon spans into link classes',
+    boldAuthorTermsLabel: "Bold 'Text:' & 'Photos' in author line",
+    boldAuthorTermsDesc: "Wraps author terms in strong tags"
   }
 }
 

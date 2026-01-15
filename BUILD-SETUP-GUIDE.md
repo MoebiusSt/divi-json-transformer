@@ -2,7 +2,7 @@
 
 ## ⚠️ WICHTIG: Fehlende Konfigurationsdateien
 
-Das Source-Code-Archiv enthält **NICHT** alle Konfigurationsdateien, die vom artifacts-builder automatisch generiert wurden. Hier sind die fehlenden Dateien und wie du sie erstellst:
+Das Source-Code-Archiv enthält **NICHT** alle Konfigurationsdateien. Hier sind die fehlenden Dateien und wie du sie erstellst:
 
 ---
 

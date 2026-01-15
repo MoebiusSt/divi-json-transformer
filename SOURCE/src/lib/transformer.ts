@@ -145,6 +145,7 @@ function processHTML(html: string, specialTransform: boolean, settings: Transfor
   if (settings.fixLinkIcons) fixLinkIcons(body, log)
   if (settings.removeEmptySpans) removeEmptySpans(body, log)
   if (settings.processTagMerging) mergeFragmentedTags(body, log)
+  if (settings.boldAuthorTerms) processAuthorLines(body, log)
   let processedHTML = body.innerHTML
   const splitResults = splitTextAtSplits(processedHTML, settings, log)
   return splitResults
@@ -458,4 +459,17 @@ function sanitizeTextForDivi(text: string): string {
   text = text.replace(/\[/g, '(').replace(/\]/g, ')')
   text = text.replace(/"/g, "'")
   return text
+}
+
+function processAuthorLines(body: HTMLElement, _log: LogFunction): void {
+  const h6s = Array.from(body.querySelectorAll('h6'))
+  for (const h6 of h6s) {
+    const text = h6.textContent?.trim() || ''
+    if (/^(Text|Autor|Interview):/i.test(text)) {
+       let newHtml = h6.innerHTML
+       const regex = /(Text:|Autor:|Interview:|Fotos?:|Bilder:|Abbildungen:|Zeichnunge?n?:|Photos?:|Images?:|Pictures?:|Author:)/gi
+       newHtml = newHtml.replace(regex, '<strong>$1</strong>')
+       h6.innerHTML = newHtml
+    }
+  }
 }

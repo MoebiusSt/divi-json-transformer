@@ -170,16 +170,29 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
     if (settings.mode === 'advanced') return [{ html, paragraphCount: countParagraphs(html) }]
     return [html]
   }
-  const allElements = Array.from(body.children)
-  const splitPoints: Element[] = []
-  for (const element of allElements) {
-    if (splitTags.includes(element.tagName.toLowerCase())) splitPoints.push(element)
+  const allNodes = Array.from(body.childNodes)
+  const splitPoints: Node[] = []
+  for (const node of allNodes) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const element = node as Element
+      if (splitTags.includes(element.tagName.toLowerCase())) splitPoints.push(node)
+    }
   }
   const newModules: Array<string | { html: string; paragraphCount: number }> = []
   let currentModule: string[] = []
   let paragraphCount = 0
-  for (const element of allElements) {
-    const shouldSplit = splitPoints.includes(element)
+
+  const getNodeHTML = (node: Node): string => {
+    if (node.nodeType === Node.ELEMENT_NODE) return (node as Element).outerHTML
+    const div = document.createElement('div')
+    div.appendChild(node.cloneNode(true))
+    return div.innerHTML
+  }
+
+  for (const node of allNodes) {
+    const shouldSplit = splitPoints.includes(node)
+    const nodeHTML = getNodeHTML(node)
+
     if (shouldSplit && currentModule.length > 0) {
       const moduleHTML = currentModule.join('')
       if (settings.mode === 'advanced') {
@@ -187,12 +200,15 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
       } else {
         newModules.push(moduleHTML)
       }
-      currentModule = [element.outerHTML]
-      paragraphCount = element.tagName.toLowerCase() === 'p' ? 1 : 0
+      currentModule = [nodeHTML]
+      paragraphCount = (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName.toLowerCase() === 'p') ? 1 : 0
     } else {
-      currentModule.push(element.outerHTML)
-      if (element.tagName.toLowerCase() === 'p') paragraphCount++
-      if (settings.mode === 'advanced' && element.tagName.toLowerCase() === 'p' && settings.maxParagraphsPerModule > 0 && paragraphCount >= settings.maxParagraphsPerModule && currentModule.length > 0) {
+      currentModule.push(nodeHTML)
+      if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName.toLowerCase() === 'p') paragraphCount++
+      
+      const isParagraph = node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName.toLowerCase() === 'p'
+      
+      if (settings.mode === 'advanced' && isParagraph && settings.maxParagraphsPerModule > 0 && paragraphCount >= settings.maxParagraphsPerModule && currentModule.length > 0) {
         const moduleHTML = currentModule.join('')
         newModules.push({ html: moduleHTML, paragraphCount })
         currentModule = []
@@ -329,6 +345,7 @@ function removeEmptySpans(body: HTMLElement, _log: LogFunction): void {
 function fixLinkIcons(body: HTMLElement, _log: LogFunction): void {
   const links = Array.from(body.querySelectorAll('a'))
   for (const link of links) {
+    // Check for preceding icon span
     const prev = link.previousSibling
     if (prev && prev.nodeType === Node.ELEMENT_NODE && (prev as Element).tagName.toLowerCase() === 'span') {
       const span = prev as HTMLElement
@@ -338,6 +355,20 @@ function fixLinkIcons(body: HTMLElement, _log: LogFunction): void {
         link.classList.add('link-icon')
         span.remove()
       }
+    }
+    
+    // Check for internal icon spans (unwrap them)
+    // Example: <span class="hyperlink arrow">...</span>
+    const internalSpans = Array.from(link.querySelectorAll('span'))
+    for (const span of internalSpans) {
+       const className = span.className.toLowerCase()
+       if (className.includes('hyperlink') || className.includes('arrow')) {
+           // Unwrap: move children to parent
+           while (span.firstChild) {
+               span.parentNode?.insertBefore(span.firstChild, span)
+           }
+           span.remove()
+       }
     }
   }
 }

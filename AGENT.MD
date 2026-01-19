@@ -51,7 +51,8 @@ Das Projekt nutzt Vite mit dem `vite-plugin-singlefile`, um eine einzelne HTML-D
     *   Danach läuft `vite build`.
 
 3.  **Deployment (Kopieren)**:
-    Die generierte Datei liegt nun unter `SOURCE/dist/index.html`. Kopiere sie ins Root-Verzeichnis:
+    Die generierte Datei liegt nun unter `SOURCE/dist/index.html`. Kopiere sie ins Root-Verzeichnis.
+    **WICHTIG**: Ein neuer Build MUSS immer die Version im Root (`divi-json-transformer.html`) ersetzen!
     *   PowerShell:
         ```powershell
         Copy-Item -Path "dist/index.html" -Destination "../divi-json-transformer.html" -Force

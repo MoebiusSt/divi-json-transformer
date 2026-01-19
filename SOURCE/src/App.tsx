@@ -10,9 +10,30 @@ import type { TransformSettings, Language } from './lib/types'
 import { useTranslation } from './lib/translations'
 import './App.css'
 
+const STORAGE_KEY_SETTINGS = 'divi-transformer-settings'
+const STORAGE_KEY_LANGUAGE = 'divi-transformer-language'
+
+function loadSettings(): TransformSettings {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY_SETTINGS)
+    if (saved) return { ...defaultSettings, ...JSON.parse(saved) }
+  } catch { /* ignore corrupt data */ }
+  return defaultSettings
+}
+
+function loadLanguage(): Language {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY_LANGUAGE)
+    if (saved && ['en', 'de', 'fr', 'es', 'ar', 'it', 'ru', 'nl'].includes(saved)) {
+      return saved as Language
+    }
+  } catch { /* ignore */ }
+  return 'en'
+}
+
 function App() {
-  const [language, setLanguage] = useState<Language>('en')
-  const [settings, setSettings] = useState<TransformSettings>(defaultSettings)
+  const [language, setLanguage] = useState<Language>(loadLanguage)
+  const [settings, setSettings] = useState<TransformSettings>(loadSettings)
   const [logs, setLogs] = useState<string[]>([])
   const t = useTranslation(language)
 
@@ -23,6 +44,16 @@ function App() {
   useEffect(() => {
     setLogs([t.ready, t.dragFiles])
   }, [language, t.ready, t.dragFiles])
+
+  // Persist settings to localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings))
+  }, [settings])
+
+  // Persist language to localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY_LANGUAGE, language)
+  }, [language])
 
   const handleFilesSelected = useCallback(async (files: File[]) => {
     setLogs([])

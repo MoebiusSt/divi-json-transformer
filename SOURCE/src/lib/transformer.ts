@@ -45,7 +45,7 @@ function processMarkupNormalMode(originalMarkup: string, textModules: string[], 
     if (!tagMatch) continue
     let fullTag = tagMatch[0].slice(1, -1)
     if (newHtmls.length === 1) {
-      const adminLabel = createAdminLabel(newHtmls[0])
+      const adminLabel = createAdminLabel(newHtmls[0], settings)
       fullTag = fullTag.replace(/admin_label="[^"]*"/g, '')
       fullTag = fullTag.trim() + ` admin_label="${adminLabel}"`
       const newModule = `[${fullTag}]${newHtmls[0]}[/et_pb_text]`
@@ -53,7 +53,7 @@ function processMarkupNormalMode(originalMarkup: string, textModules: string[], 
     } else {
       let newModules = ''
       for (const htmlContent of newHtmls) {
-        const adminLabel = createAdminLabel(htmlContent)
+        const adminLabel = createAdminLabel(htmlContent, settings)
         const cleanTag = fullTag.replace(/admin_label="[^"]*"/g, '')
         const moduleTag = cleanTag.trim() + ` admin_label="${adminLabel}"`
         newModules += `[${moduleTag}]${htmlContent}[/et_pb_text]`
@@ -82,7 +82,7 @@ function processMarkupAdvancedMode(markupString: string, settings: TransformSett
     const chunks: string[] = []
     for (const moduleInfo of processedModules) {
         const moduleHTML = moduleInfo.html
-        const adminLabel = createAdminLabel(moduleHTML)
+        const adminLabel = createAdminLabel(moduleHTML, settings)
         const cleanTag = fullTag.replace(/admin_label="[^"]*"/g, '')
         const moduleTag = cleanTag.trim() + ` admin_label="${adminLabel}"`
         chunks.push(`[${moduleTag}]${moduleHTML}[/et_pb_text]`)
@@ -463,7 +463,7 @@ function countParagraphs(html: string): number {
   return doc.querySelectorAll('p').length
 }
 
-function createAdminLabel(htmlContent: string): string {
+function createAdminLabel(htmlContent: string, settings: TransformSettings): string {
   try {
     const parser = new DOMParser()
     const doc = parser.parseFromString(htmlContent, 'text/html')
@@ -478,7 +478,7 @@ function createAdminLabel(htmlContent: string): string {
     text = sanitizeTextForDivi(text)
     if (text.length > 40) text = text.substring(0, 37) + '...'
     if (isHeading) return `HEAD - ${text}`
-    else if (isBlockquote) return `ZITAT - ${text}`
+    else if (isBlockquote) return settings.processInterviewLists ? text : `ZITAT - ${text}`
     else if (isList) return `LISTE - ${text}`
     else return text
   } catch (error) {

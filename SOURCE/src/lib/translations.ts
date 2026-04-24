@@ -1,4 +1,7 @@
 import type { Language } from './types'
+import { APP_VERSION } from './version'
+
+const withVersion = (text: string): string => `${text} v${APP_VERSION}`
 
 export interface Translations {
   title: string
@@ -52,7 +55,7 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   en: {
     title: 'DIVI JSON Transformer',
-    subtitle: 'Transform DIVI JSON exports into better structured layouts v2.0.6',
+    subtitle: withVersion('Transform DIVI JSON exports into better structured layouts'),
     settings: 'Settings',
     processingMode: 'Processing Mode',
     normal: 'Normal',
@@ -100,7 +103,7 @@ export const translations: Record<Language, Translations> = {
   },
   de: {
     title: 'DIVI JSON Transformer',
-    subtitle: 'Verwandelt DIVI JSON-Exporte in besser strukturierte Layouts v2.0.6',
+    subtitle: withVersion('Verwandelt DIVI JSON-Exporte in besser strukturierte Layouts'),
     settings: 'Einstellungen',
     processingMode: 'Verarbeitungsmodus',
     normal: 'Normal',
@@ -148,7 +151,7 @@ export const translations: Record<Language, Translations> = {
   },
   fr: {
     title: 'DIVI JSON Transformer',
-    subtitle: 'Transforme les exports JSON DIVI v2.0.6',
+    subtitle: withVersion('Transforme les exports JSON DIVI'),
     settings: 'Paramètres',
     processingMode: 'Mode',
     normal: 'Normal',
@@ -196,7 +199,7 @@ export const translations: Record<Language, Translations> = {
   },
   es: {
     title: 'DIVI JSON Transformer',
-    subtitle: 'Transforma exportaciones JSON DIVI v2.0.6',
+    subtitle: withVersion('Transforma exportaciones JSON DIVI'),
     settings: 'Configuración',
     processingMode: 'Modo',
     normal: 'Normal',
@@ -244,7 +247,7 @@ export const translations: Record<Language, Translations> = {
   },
   ar: {
     title: 'محول DIVI JSON',
-    subtitle: 'تحويل صادرات DIVI JSON v2.0.6',
+    subtitle: withVersion('تحويل صادرات DIVI JSON'),
     settings: 'الإعدادات',
     processingMode: 'الوضع',
     normal: 'عادي',
@@ -292,7 +295,7 @@ export const translations: Record<Language, Translations> = {
   },
   it: {
     title: 'DIVI JSON Transformer',
-    subtitle: 'Trasforma esportazioni JSON DIVI v2.0.6',
+    subtitle: withVersion('Trasforma esportazioni JSON DIVI'),
     settings: 'Impostazioni',
     processingMode: 'Modalità',
     normal: 'Normale',
@@ -340,7 +343,7 @@ export const translations: Record<Language, Translations> = {
   },
   ru: {
     title: 'DIVI JSON Transformer',
-    subtitle: 'Преобразование экспортов DIVI JSON v2.0.6',
+    subtitle: withVersion('Преобразование экспортов DIVI JSON'),
     settings: 'Настройки',
     processingMode: 'Режим',
     normal: 'Обычный',
@@ -388,7 +391,7 @@ export const translations: Record<Language, Translations> = {
   },
   nl: {
     title: 'DIVI JSON Transformer',
-    subtitle: 'Transformeer DIVI JSON-exports v2.0.6',
+    subtitle: withVersion('Transformeer DIVI JSON-exports'),
     settings: 'Instellingen',
     processingMode: 'Modus',
     normal: 'Normaal',

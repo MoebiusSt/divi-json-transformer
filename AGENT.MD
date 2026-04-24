@@ -34,29 +34,47 @@ Um eine neue Funktion (z.B. eine neue Checkbox im Dev-Mode) hinzuzufügen, müss
 *   Füge den Aufruf in `processHTML` (für DOM-Manipulationen) oder `processMarkup` (für Text-Manipulationen) ein.
 *   Greife auf `settings.newFeature` zu, um die Logik bedingt auszuführen.
 
-## Workflow: Kompilieren & Deployen
+## Workflow: Build, Version Sync, and GitHub Pages Deploy
 
-Das Projekt nutzt Vite mit dem `vite-plugin-singlefile`, um eine einzelne HTML-Datei ohne externe Abhängigkeiten zu erzeugen.
+The project is hosted on GitHub Pages:
+- Production URL: `https://moebiusst.github.io/divi-json-transformer/`
+- Repository: `https://github.com/MoebiusSt/divi-json-transformer`
 
-1.  **Terminal öffnen** und in das Source-Verzeichnis wechseln:
-    ```bash
-    cd SOURCE
-    ```
+### Local Build Flow
 
-2.  **Build ausführen**:
-    ```bash
-    npm run build
-    ```
-    *   Dieser Befehl führt zuerst `tsc -b` (TypeScript Compiler) aus. Fehler hier (z.B. fehlende Übersetzungen) brechen den Build ab.
-    *   Danach läuft `vite build`.
+1. Open terminal and switch to `SOURCE`:
+   ```bash
+   cd SOURCE
+   ```
+2. Run build:
+   ```bash
+   npm run build
+   ```
+3. Important:
+   - `prebuild` runs `npm run sync-version` automatically.
+   - `sync-version` reads `SOURCE/package.json` and updates:
+     - `SOURCE/src/lib/version.ts` (`APP_VERSION`)
+     - Root `README.md` version header and footer line
+   - This keeps app subtitle/help text and README version in sync.
 
-3.  **Deployment (Kopieren)**:
-    Die generierte Datei liegt nun unter `SOURCE/dist/index.html`. Kopiere sie ins Root-Verzeichnis.
-    **WICHTIG**: Ein neuer Build MUSS immer die Version im Root (`divi-json-transformer.html`) ersetzen!
-    *   PowerShell:
-        ```powershell
-        Copy-Item -Path "dist/index.html" -Destination "../divi-json-transformer.html" -Force
-        ```
+### GitHub Actions Deploy Flow
+
+- Workflow file: `.github/workflows/deploy-pages.yml`
+- Trigger:
+  - Push to `main`
+  - Manual run (`workflow_dispatch`) in GitHub Actions
+- Build path: `SOURCE/`
+- Deploy artifact: `SOURCE/dist`
+- Pages source setting in GitHub must be `GitHub Actions`.
+
+### Feature Release Rule (Agent)
+
+For every user-requested feature change:
+1. Bump version in `SOURCE/package.json` (semantic increment agreed with user).
+2. Run `npm run build` (which also runs version sync).
+3. Commit relevant files with a clear feature/release message.
+4. Push to `origin/main` so GitHub Pages auto-deploy runs.
+5. Confirm deployed version by checking the Pages site and/or Actions run.
 
 ## Lessons Learned & Häufige Fehler
 

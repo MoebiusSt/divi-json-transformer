@@ -3,8 +3,9 @@ import { HelpCircle } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
 import { ScrollArea } from '../components/ui/scroll-area'
+import { APP_VERSION } from '../lib/version'
 
-const readmeContent = `# DIVI JSON Transformer v2.0.6
+const readmeContent = `# DIVI JSON Transformer v${APP_VERSION}
 
 Transform DIVI JSON exports. Split long DIVI text modules which contain HTML text with headings or lists into several text modules or rows.
 
@@ -54,7 +55,7 @@ All features of Advanced Mode, plus:
 - Bundled with Parcel
 
 ---
-**Version**: 2.0.5  
+**Version**: ${APP_VERSION}  
 **License**: Free for personal and commercial use`
 
 function formatMarkdown(text: string): React.ReactElement {

@@ -75,6 +75,7 @@ For every user-requested feature change:
 3. Commit relevant files with a clear feature/release message.
 4. Push to `origin/main` so GitHub Pages auto-deploy runs.
 5. Confirm deployed version by checking the Pages site and/or Actions run.
+6. Keep existing localStorage settings whenever possible; only invalidate/reset settings if a feature introduces a real incompatible schema change.
 
 ## Lessons Learned & Häufige Fehler
 

@@ -166,11 +166,26 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
   if (settings.splits.ol) splitTags.push('ol')
   if (settings.splits.ul) splitTags.push('ul')
   
-  if (splitTags.length === 0) {
+  if (splitTags.length === 0 && !(settings.mode === 'advanced' && settings.maxParagraphsPerModule > 0)) {
     if (settings.mode === 'advanced') return [{ html, paragraphCount: countParagraphs(html) }]
     return [html]
   }
-  const allNodes = Array.from(body.childNodes)
+  const allNodes: Node[] = []
+  for (const node of Array.from(body.childNodes)) {
+    if (node.nodeType === Node.TEXT_NODE && node.textContent && /\n\s*\n/.test(node.textContent)) {
+      const parts = node.textContent.split(/(\n\s*\n)/)
+      for (let i = 0; i < parts.length; i += 2) {
+        const text = parts[i]
+        const separator = parts[i + 1] || ''
+        if (text || separator) {
+          allNodes.push(document.createTextNode(text + separator))
+        }
+      }
+    } else {
+      allNodes.push(node)
+    }
+  }
+
   const splitPoints: Node[] = []
   for (const node of allNodes) {
     if (node.nodeType === Node.ELEMENT_NODE) {
@@ -204,9 +219,15 @@ function splitTextAtSplits(html: string, settings: TransformSettings, _log: LogF
       paragraphCount = (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName.toLowerCase() === 'p') ? 1 : 0
     } else {
       currentModule.push(nodeHTML)
-      if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName.toLowerCase() === 'p') paragraphCount++
       
-      const isParagraph = node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName.toLowerCase() === 'p'
+      let isParagraph = false
+      if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName.toLowerCase() === 'p') {
+        isParagraph = true
+      } else if (node.nodeType === Node.TEXT_NODE && node.textContent && /\n\s*\n$/.test(node.textContent)) {
+        isParagraph = true
+      }
+
+      if (isParagraph) paragraphCount++
       
       if (settings.mode === 'advanced' && isParagraph && settings.maxParagraphsPerModule > 0 && paragraphCount >= settings.maxParagraphsPerModule && currentModule.length > 0) {
         const moduleHTML = currentModule.join('')

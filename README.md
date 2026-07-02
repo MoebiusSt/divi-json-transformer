@@ -1,4 +1,4 @@
-# DIVI JSON Transformer v2.0.8
+# DIVI JSON Transformer v2.0.9
 
 https://github.com/MoebiusSt/divi-json-transformer
 
@@ -119,6 +119,6 @@ Feel free to share this tool with anyone who works with DIVI! The single HTML fi
 - Used offline
 
 ---
-**Version**: 2.0.8
+**Version**: 2.0.9
 **Last Updated**: January 2026  
 **Compatibility**: DIVI Builder JSON exports

@@ -44,11 +44,19 @@ export function DropZone({ onFilesSelected, language }: DropZoneProps) {
     input.type = 'file'
     input.accept = '.json'
     input.multiple = true
+    input.style.display = 'none'
+    // Some browsers only reliably open the file picker / fire subsequent
+    // 'change' events for inputs that are actually attached to the DOM.
+    document.body.appendChild(input)
+    const cleanup = () => {
+      input.remove()
+    }
     input.onchange = (e) => {
       const target = e.target as HTMLInputElement
       if (target.files && target.files.length > 0) {
         onFilesSelected(Array.from(target.files))
       }
+      cleanup()
     }
     input.click()
   }, [onFilesSelected])

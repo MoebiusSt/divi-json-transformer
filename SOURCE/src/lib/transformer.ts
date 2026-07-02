@@ -65,6 +65,15 @@ function processMarkupNormalMode(originalMarkup: string, textModules: string[], 
 }
 
 function processMarkupAdvancedMode(markupString: string, settings: TransformSettings, log: LogFunction): string {
+  // Row-splitting must count modules cumulatively across the whole original row,
+  // not just within a single et_pb_text match. Otherwise a row that already contains
+  // several separate et_pb_text modules (a very common Divi export layout) never
+  // triggers the row split, because each match only ever "sees" its own chunk count.
+  let currentRowStartIdx = -1
+  let moduleCountInRow = 0
+  let currentRowAttrs = ''
+  let currentColAttrs = ''
+
   // Use replace with callback to process modules in-place while having access to offset
   return markupString.replace(/\[et_pb_text[^\]]*\](?:(?!\[\/et_pb_text\]).)*\[\/et_pb_text\]/gs, (match, offset, string) => {
     const { content } = extractContentFromModule(match)
@@ -88,51 +97,44 @@ function processMarkupAdvancedMode(markupString: string, settings: TransformSett
         chunks.push(`[${moduleTag}]${moduleHTML}[/et_pb_text]`)
     }
 
-    // Check if Row Splitting is needed
-    if (settings.maxModulesPerRow > 0 && chunks.length > settings.maxModulesPerRow) {
-        // Search backwards from 'offset' for [et_pb_row ...] and [et_pb_column ...]
-        const precedingText = string.substring(0, offset)
-        
-        // Find last Row (closest to the module)
-        // We use a regex that matches the tag and ensures no other [et_pb_row starts after it
-        const rowMatch = precedingText.match(/\[et_pb_row([^\]]*)\](?:(?!\[et_pb_row).)*$/s)
+    if (settings.maxModulesPerRow <= 0) return chunks.join('')
+
+    // Search backwards from 'offset' for the enclosing [et_pb_row ...] and [et_pb_column ...]
+    const precedingText = string.substring(0, offset)
+    const rowMatch = precedingText.match(/\[et_pb_row([^\]]*)\](?:(?!\[et_pb_row).)*$/s)
+    const rowStartIdx = rowMatch ? rowMatch.index! : -1
+
+    // A new original row starts: reset the cumulative counter and cache its attributes.
+    if (rowStartIdx !== currentRowStartIdx) {
+        currentRowStartIdx = rowStartIdx
+        moduleCountInRow = 0
+
         let rowAttrs = rowMatch ? rowMatch[1] : ''
-        
-        // Find last Column
         const colMatch = precedingText.match(/\[et_pb_column([^\]]*)\](?:(?!\[et_pb_column).)*$/s)
         let colAttrs = colMatch ? colMatch[1] : ''
 
-        // Clean attributes for re-use (remove admin_label to avoid duplicates/confusion if we wanted, 
-        // but keeping them or modifying them might be better. 
-        // Let's add a specialized label for the continuation rows)
-        
-        // Actually, for the new row, we probably want a generic label or "Fortsetzung"
-        // But simply copying attributes is safer for layout preservation.
-        // We will append a new admin_label to overwrite the old one if needed, or let the user handle it.
-        // To be safe, let's update the admin_label for the new rows to indicate they are continuations.
+        // For continuation rows, keep original attributes but mark the admin_label.
         if (rowAttrs.includes('admin_label="')) {
            rowAttrs = rowAttrs.replace(/admin_label="([^"]*)"/, 'admin_label="$1 (Fortsetzung)"')
         } else {
            rowAttrs += ' admin_label="Fortsetzung"'
         }
-
-        let result = ''
-        
-        for (let i = 0; i < chunks.length; i++) {
-            // If we filled a row, close it and start a new one
-            // BUT: The first chunk(s) stay in the current row/column.
-            // So we only insert breaks AFTER the first set of modules.
-            
-            if (i > 0 && i % settings.maxModulesPerRow === 0) {
-                 result += `[/et_pb_column][/et_pb_row][et_pb_row${rowAttrs}][et_pb_column${colAttrs}]`
-            }
-            result += chunks[i]
-        }
-        return result
-    } else {
-        // No row splitting needed, just replace the module with the split modules
-        return chunks.join('')
+        currentRowAttrs = rowAttrs
+        currentColAttrs = colAttrs
     }
+
+    let result = ''
+    for (const chunk of chunks) {
+        // Close the current row/column and open a new one BEFORE placing a module
+        // that would exceed the configured maximum for the (destination) row.
+        if (moduleCountInRow >= settings.maxModulesPerRow) {
+            result += `[/et_pb_column][/et_pb_row][et_pb_row${currentRowAttrs}][et_pb_column${currentColAttrs}]`
+            moduleCountInRow = 0
+        }
+        result += chunk
+        moduleCountInRow++
+    }
+    return result
   })
 }
 

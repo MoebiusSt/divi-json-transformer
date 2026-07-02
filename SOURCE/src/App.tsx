@@ -1,7 +1,9 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { Settings } from './components/Settings'
 import { DropZone } from './components/DropZone'
 import { StatusLog } from './components/StatusLog'
+import { DownloadList } from './components/DownloadList'
+import type { DownloadEntry } from './components/DownloadList'
 import { LanguageSelector } from './components/LanguageSelector'
 import { HelpDialog } from './components/HelpDialog'
 import { transformJSON } from './lib/transformer'
@@ -35,6 +37,7 @@ function App() {
   const [language, setLanguage] = useState<Language>(loadLanguage)
   const [settings, setSettings] = useState<TransformSettings>(loadSettings)
   const [logs, setLogs] = useState<string[]>([])
+  const [downloads, setDownloads] = useState<DownloadEntry[]>([])
   const t = useTranslation(language)
 
   const addLog = useCallback((message: string) => {
@@ -55,6 +58,13 @@ function App() {
     localStorage.setItem(STORAGE_KEY_LANGUAGE, language)
   }, [language])
 
+  // Release all generated object URLs when the app itself unmounts (page close/reload).
+  const downloadsRef = useRef(downloads)
+  downloadsRef.current = downloads
+  useEffect(() => {
+    return () => { downloadsRef.current.forEach(d => URL.revokeObjectURL(d.url)) }
+  }, [])
+
   const handleFilesSelected = useCallback(async (files: File[]) => {
     setLogs([])
     for (const file of files) {
@@ -71,15 +81,20 @@ function App() {
         const result = transformJSON(jsonData, settings, addLog)
         const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' })
         const url = URL.createObjectURL(blob)
+        const outputName = file.name.replace('.json', '_output.json')
+        // Keep the object URL alive (not revoked) so the manual link in the
+        // Downloads list below keeps working even if the browser silently
+        // blocks the automatic download (observed e.g. in Opera for repeated
+        // downloads without a fresh permission grant).
+        setDownloads(prev => [{ name: outputName, url }, ...prev])
         const link = document.createElement('a')
         link.href = url
-        link.download = file.name.replace('.json', '_output.json')
+        link.download = outputName
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
-        URL.revokeObjectURL(url)
         addLog(`✅ ${t.completed}`)
-        addLog(`💾 ${t.downloadStarted} ${link.download}`)
+        addLog(`💾 ${t.downloadStarted} ${outputName}`)
       } catch (error) {
         addLog(`❌ ${t.error} ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`)
         console.error(error)
@@ -104,6 +119,7 @@ function App() {
           <Settings settings={settings} onSettingsChange={setSettings} language={language} />
           <DropZone onFilesSelected={handleFilesSelected} language={language} />
           <StatusLog logs={logs.length > 0 ? logs : [t.ready, t.dragFiles]} language={language} />
+          <DownloadList downloads={downloads} language={language} />
         </div>
       </div>
     </div>

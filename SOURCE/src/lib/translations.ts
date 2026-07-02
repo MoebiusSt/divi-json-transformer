@@ -37,6 +37,8 @@ export interface Translations {
   completed: string
   downloadStarted: string
   error: string
+  downloadsHeading: string
+  downloadsHint: string
   settingsTooltip: string
   footnoteSettings: string
   footnoteLabel: string
@@ -87,6 +89,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'Transformation completed!',
     downloadStarted: 'Download started:',
     error: 'Error:',
+    downloadsHeading: 'Downloads',
+    downloadsHint: "If a download didn't start automatically, click it here:",
     settingsTooltip: 'Configure how JSON files should be transformed',
     footnoteSettings: 'Footnote Settings',
     footnoteLabel: 'Transform footnotes',
@@ -135,6 +139,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'Transformation abgeschlossen!',
     downloadStarted: 'Download gestartet:',
     error: 'Fehler:',
+    downloadsHeading: 'Downloads',
+    downloadsHint: 'Falls ein Download nicht automatisch gestartet ist, hier klicken:',
     settingsTooltip: 'Konfiguriere wie die JSON-Dateien transformiert werden sollen',
     footnoteSettings: 'Fußnoten-Einstellungen',
     footnoteLabel: 'Fußnoten transformieren',
@@ -183,6 +189,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'Terminé!',
     downloadStarted: 'Téléchargement:',
     error: 'Erreur:',
+    downloadsHeading: 'Téléchargements',
+    downloadsHint: "Si un téléchargement n'a pas démarré automatiquement, cliquez ici :",
     settingsTooltip: 'Configuration',
     footnoteSettings: 'Notes',
     footnoteLabel: 'Transformer notes',
@@ -231,6 +239,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'Completado!',
     downloadStarted: 'Descarga:',
     error: 'Error:',
+    downloadsHeading: 'Descargas',
+    downloadsHint: 'Si una descarga no se inició automáticamente, haga clic aquí:',
     settingsTooltip: 'Configurar',
     footnoteSettings: 'Notas',
     footnoteLabel: 'Transformar notas',
@@ -279,6 +289,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'اكتمل!',
     downloadStarted: 'التنزيل:',
     error: 'خطأ:',
+    downloadsHeading: 'التنزيلات',
+    downloadsHint: 'إذا لم يبدأ التنزيل تلقائيًا، انقر هنا:',
     settingsTooltip: 'تكوين',
     footnoteSettings: 'الحواشي',
     footnoteLabel: 'تحويل الحواشي',
@@ -327,6 +339,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'Completato!',
     downloadStarted: 'Download:',
     error: 'Errore:',
+    downloadsHeading: 'Download',
+    downloadsHint: 'Se un download non è partito automaticamente, clicca qui:',
     settingsTooltip: 'Configura',
     footnoteSettings: 'Note',
     footnoteLabel: 'Trasforma note',
@@ -375,6 +389,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'Завершено!',
     downloadStarted: 'Загрузка:',
     error: 'Ошибка:',
+    downloadsHeading: 'Загрузки',
+    downloadsHint: 'Если загрузка не началась автоматически, нажмите здесь:',
     settingsTooltip: 'Настроить',
     footnoteSettings: 'Сноски',
     footnoteLabel: 'Преобразовать сноски',
@@ -423,6 +439,8 @@ export const translations: Record<Language, Translations> = {
     completed: 'Voltooid!',
     downloadStarted: 'Download:',
     error: 'Fout:',
+    downloadsHeading: 'Downloads',
+    downloadsHint: 'Als een download niet automatisch is gestart, klik hier:',
     settingsTooltip: 'Configureer',
     footnoteSettings: 'Voetnoten',
     footnoteLabel: 'Voetnoten transformeren',
